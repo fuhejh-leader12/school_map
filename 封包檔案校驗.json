@@ -12,7 +12,7 @@
     },
     {
       "file": "app.js",
-      "sha256": "e0f37e294c80e6c0042e2bf52ef207288a90bd54c6586a1e01f9ec92c06865cd"
+      "sha256": "fa3f4876fb03e1cb03491ce5b82373c7093e150fbf6929eeb46eb03ac1a9e613"
     },
     {
       "file": "assets/fonts/OFL-LICENSE.txt",
@@ -80,7 +80,7 @@
     },
     {
       "file": "index.html",
-      "sha256": "a3d023341b4c810359975ac4cc92d65e659e725a26a9ae58ca4bda6a47bb8962"
+      "sha256": "d218bdcec80ff1d2cf9975d46e5b0dc07fd7de75cb1198dbd8354fb98fcd6bcf"
     },
     {
       "file": "map-theme.js",
@@ -132,11 +132,11 @@
     },
     {
       "file": "手機手勢測試說明.txt",
-      "sha256": "bb5eb9661a04026b8f8b7f82c9462da2d1fef0c9ddb68671526f6fcb75393bf0"
+      "sha256": "623e466e5b0f2d7dedbfc97ddff790920b2e8f4157684d0ffe8a5fc08a67a915"
     },
     {
       "file": "請先閱讀.txt",
-      "sha256": "6f8f2ad22223c5ac09c48e347e1e4cfa72e1a1030bf353e478a87003015a8f8f"
+      "sha256": "c2877dbadf2bccb627293be84546ef4093bbd27a5ca0522c3b607ce662a7faba"
     }
   ]
 }

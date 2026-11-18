@@ -47,7 +47,7 @@ function renderMaps() {
   function setMode(mode){cancelIntro();viewMode=mode;applyView();}
   function enterStage(){
     // 手機：1F停在整層，由家長按「放大看路線」決定是否拉近；2F以後直接對準路線。電腦：一律整層。
-    if(!syncBounds()){pendingEnter=true;updateCamera();return;}pendingEnter=false;viewMode=wantsFocus()&&current!==0?'focus':'whole';applyView();
+    if(!syncBounds()){pendingEnter=true;updateCamera();return;}pendingEnter=false;viewMode=wantsFocus()&&(current!==0||largeMode)?'focus':'whole';applyView();
   }
   function animateTo(mode){cancelIntro();if(!reduceMotion)stages.forEach(st=>st.classList?.add('map-animating'));viewMode=mode;applyView();introTimers.push(setTimeout(()=>{stages.forEach(st=>st.classList?.remove('map-animating'));introTimers=[];},900));}
   const toolbar=document.createElement('div'),tabs=document.createElement('div'),status=document.createElement('span');toolbar.className='map-toolbar';tabs.className='floor-tabs';
@@ -126,7 +126,7 @@ function renderMaps() {
     largeSlot=document.createComment('地圖原位置');maps.parentNode.insertBefore(largeSlot,maps);dialog=document.createElement('dialog');dialog.className='large-map-dialog';dialog.setAttribute('aria-label','校園導覽大地圖');dialog.setAttribute('aria-modal','true');
     const shell=document.createElement('div'),header=document.createElement('header'),title=document.createElement('h2'),close=document.createElement('button');shell.className='large-map-shell';header.className='large-map-header';title.textContent='大地圖檢視';close.className='close-large-map';close.textContent='關閉大地圖';close.setAttribute('autofocus','');close.onclick=()=>closeLargeMap();header.append(title,close);shell.append(header,maps);dialog.append(shell);document.body.append(dialog);gestureNote.textContent='單指拖曳，雙指縮放或移動地圖。';
     dialog.addEventListener('cancel',e=>{e.preventDefault();closeLargeMap();});dialog.addEventListener('close',()=>closeLargeMap());dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeLargeMap();}else if(e.key==='Tab'){const focusable=[...dialog.querySelectorAll('button,[tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);const first=focusable[0],last=focusable.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}});
-    if(typeof dialog.showModal==='function')dialog.showModal();else{dialog.setAttribute('role','dialog');dialog.setAttribute('open','');}viewMode=wantsFocus()?(current===0?'whole':'focus'):(viewMode==='whole'?'whole':'focus');applyView();close.focus({preventScroll:true});
+    if(typeof dialog.showModal==='function')dialog.showModal();else{dialog.setAttribute('role','dialog');dialog.setAttribute('open','');}viewMode=wantsFocus()?'focus':(viewMode==='whole'?'whole':'focus');applyView();close.focus({preventScroll:true});
   }
   function closeLargeMap(restoreFocus=true){
     if(!largeMode)return;largeMode=false;gestures.forEach(g=>g.cancel());largeSlot.replaceWith(maps);largeSlot=null;const previous=dialog;dialog=null;if(typeof previous.close==='function'&&previous.open)previous.close();previous.remove();Object.assign(document.body.style,savedBody);gestureNote.textContent='單指捲頁，雙指縮放或移動地圖。';viewMode=wantsFocus()&&current!==0?'focus':'whole';window.scrollTo(savedScroll.x,savedScroll.y);applyView();window.scrollTo(savedScroll.x,savedScroll.y);if(restoreFocus)expand.focus({preventScroll:true});
