@@ -1,0 +1,134 @@
+{
+  "date": "20261118",
+  "variant": "GitHubPages測試版",
+  "files": [
+    {
+      "file": ".nojekyll",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "app.js",
+      "sha256": "c5c47ab08e048280983b5ee21e6c03b4bc6bfc62ea9cb022800d420eb16ba7ec"
+    },
+    {
+      "file": "assets/fonts/jf-openhuninn-2.1.ttf",
+      "sha256": "9d5bf4932d31fe94c18cd8cfddc98bc1b14ce10f4e354c682179db290a99c825"
+    },
+    {
+      "file": "assets/fonts/map-font.js",
+      "sha256": "001edf5f07ba00f8ff45279c5009a3027ece4fdb4c69914629d535a34295a821"
+    },
+    {
+      "file": "assets/fonts/OFL-LICENSE.txt",
+      "sha256": "5df6de36ba2fe26119ac161edbed97c62a9da3c1493f6930b9d9af7f5c93004b"
+    },
+    {
+      "file": "assets/fonts/README.md",
+      "sha256": "1c9700b8c9a751706cd424a4362b24eb50e7843dd19a634386fca028e5c4e21f"
+    },
+    {
+      "file": "assets/fonts/source.json",
+      "sha256": "aa8e9756b4c5e098f6da18ee6fb875c4493c2edfd561ebf4807d1e0fa3619a5f"
+    },
+    {
+      "file": "assets/place-icons/01_academic_office.png",
+      "sha256": "ed7c1532341c52b1c4b5e98f94df865dc4166f7aa635a80ca76e7ed5119a6de2"
+    },
+    {
+      "file": "assets/place-icons/02_student_affairs.png",
+      "sha256": "e7932d14a85086fc3db20148e913438e015744c8d5fee5cb2db166242567fbab"
+    },
+    {
+      "file": "assets/place-icons/03_general_affairs.png",
+      "sha256": "abafea1a6f21537d58b8834927752364630e71913a78bd325222f675db1492ad"
+    },
+    {
+      "file": "assets/place-icons/04_counseling.png",
+      "sha256": "b177b7b55e3943ec9f57a9e0fc42c04dc32d8b51e7a5af20d3bbe3966f7f4d82"
+    },
+    {
+      "file": "assets/place-icons/05_principal_office.png",
+      "sha256": "dc87db4ac268ace8acbb42f947b62a8be95afa1efd9931fe2c6681eb8dd50276"
+    },
+    {
+      "file": "assets/place-icons/06_library.png",
+      "sha256": "450e875a554e548703fa60b3799b8d313e33601cc0daeca6e9e8dbd67fcc1a53"
+    },
+    {
+      "file": "assets/place-icons/07_auditorium.png",
+      "sha256": "4267564a2a891e41836bf56118a5e229c8116ea0dc91f449cf5372de9220e4a9"
+    },
+    {
+      "file": "assets/place-icons/08_technology_center.png",
+      "sha256": "f2a67fb9cf3914e6f9db7df89ea65a8b553f05a0606279c4733f3b5e828fb76b"
+    },
+    {
+      "file": "assets/place-icons/09_career_exploration.png",
+      "sha256": "dacbe10de3f693a4024ecc28fb2b8449d8dd5de5b24bd6ada0bdd37cc3ce3fb5"
+    },
+    {
+      "file": "assets/福和國中校徽.png",
+      "sha256": "74dc86777423b93601acaef2f74658ff534fea3cc1bd2396b4b83606769a74fa"
+    },
+    {
+      "file": "facilities.js",
+      "sha256": "95228a057bc229ff9718c70175c6f18456f565aa7fde7ab65a93651443b3c075"
+    },
+    {
+      "file": "index.html",
+      "sha256": "dc57e13d5bfa15e5bac364ab9dbba201eab07b7c235fceeec3ae7f6a0084c75d"
+    },
+    {
+      "file": "map-theme.js",
+      "sha256": "24eda7929d4513d748bdda093d57cd70e6006e8955b100a093895dbb74fcddf5"
+    },
+    {
+      "file": "map-view.js",
+      "sha256": "ab773d13036731d2b73532793a6da4ab39874d7f34c28bfebcb4c04287ed8449"
+    },
+    {
+      "file": "navigation.js",
+      "sha256": "e352f4607bfc5eaacb98b4b1ca5c94a922f88565315aae4a10f49245359a8b48"
+    },
+    {
+      "file": "place-icons.css",
+      "sha256": "088864e5a7505f680257b7a6042db761cc5dc869fad890eea5950c106a69c3e7"
+    },
+    {
+      "file": "README.md",
+      "sha256": "d2c0750f7c3c5b05660af1b81e9dcf60a7c048362f1a73a8fc9a3da1b40e47dd"
+    },
+    {
+      "file": "result-page.css",
+      "sha256": "2427cf32734245aba6cb76d298a188cd9d5026efaa6f6eaba22fe53344191db3"
+    },
+    {
+      "file": "routing.js",
+      "sha256": "19fcb634b6ad8d4b8ddb78aa290e725158cd96d6bc82ad33dde02ea3e3035cfa"
+    },
+    {
+      "file": "runtime/current.js",
+      "sha256": "e2a4e3263582d1e20a3b5d7fc7aa88b9d24facfdd8ef28b0d4402e00dc73a183"
+    },
+    {
+      "file": "selection.js",
+      "sha256": "3a94c548a7bbd1c7223f34b806ed1d458469e21083a74e7903d94affb321b108"
+    },
+    {
+      "file": "style.css",
+      "sha256": "ad820cc13fd03dfdc144506aca582c00f7c5da1bfcf9b6d3a36e6abb9146ab9a"
+    },
+    {
+      "file": "three-pages.css",
+      "sha256": "ae7292f1dd71a33530564faef90d5e0c16818fb4d6baef01dfaf854c53fcd7a6"
+    },
+    {
+      "file": "typography.css",
+      "sha256": "857b8b53f5267e3f58633397eba48b0d3473c9ee5029d939711375ccb03d1863"
+    },
+    {
+      "file": "請先閱讀.txt",
+      "sha256": "55b4765fcb86c8202219d0b636ee44fc79aa13c1cc75af84bf8d7c30bc97fe78"
+    }
+  ]
+}

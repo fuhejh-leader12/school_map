@@ -1,0 +1,31 @@
+/* 僅三個選擇畫面的排版；不覆寫地圖、路線或導覽結果樣式。 */
+body:has(#type-screen:not([hidden])){position:relative;isolation:isolate}
+body:has(#type-screen:not([hidden]))::before{content:"";position:absolute;inset:0 0 auto;height:350px;background:linear-gradient(115deg,#eaf6ee 0%,#eef5fa 50%,#f2edf9 100%);opacity:.72;mask-image:linear-gradient(to bottom,#000 50%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,#000 50%,transparent 100%);z-index:-1;pointer-events:none}
+body:has(#type-screen:not([hidden])) .site-header{border-bottom:0}
+.home-panel{max-width:980px;margin:24px auto 40px;padding:24px 18px;background:transparent}
+.home-panel h2{margin-bottom:12px}.home-panel .intro{margin-bottom:28px}
+.home-panel .type-options{gap:20px}.home-panel .type-card{display:grid;grid-template-columns:58px minmax(0,1fr);grid-template-rows:auto auto auto;align-content:center;gap:4px 22px;min-height:210px;padding:28px;border-radius:20px;border-color:#d7e4e4;box-shadow:0 4px 16px #25475105}
+.home-panel .card-icon{grid-column:1;grid-row:1/4;position:static;margin:0;align-self:start;background:#ffffff85}.home-panel .type-card strong,.home-panel .card-description,.home-panel .card-link{grid-column:2}.home-panel .card-link{margin-top:14px}.home-panel .class-card{background:#e6eff6}.home-panel .place-card{background:#e4f1e9}
+#pick-screen{max-width:960px;margin:24px auto;padding:12px;border:0;border-radius:0;background:transparent}
+#pick-screen #back-types{background:transparent;border:0;padding-left:0;color:#3d5d6d;margin-bottom:20px;box-shadow:none}
+#pick-screen #back-types::before{content:'←';margin-right:10px}
+#pick-screen .grade-tabs{max-width:440px;padding:0;gap:10px;border-radius:0;background:transparent;margin-bottom:28px}
+#pick-screen .grade-tabs button{background:transparent;border-color:transparent;border-radius:12px;color:#536574}
+#pick-screen[data-grade="7"]{--grade-tint:#DCEAF9;--grade-ink:#2d506f;--grade-line:#88a8c8}
+#pick-screen[data-grade="8"]{--grade-tint:#DDF1E7;--grade-ink:#2b5c49;--grade-line:#87b09d}
+#pick-screen[data-grade="9"]{--grade-tint:#EAE3F8;--grade-ink:#544274;--grade-line:#ae9bc9}
+#pick-screen .grade-tabs button[aria-pressed="true"]{background:var(--grade-tint);border-color:var(--grade-line);color:var(--grade-ink);font-weight:600}
+#pick-screen[data-type="class"] .destination-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin:22px 0 26px}
+#pick-screen[data-type="class"] .destination-button{background:white;border-color:#dce3e7;min-height:76px;border-radius:14px;position:relative;box-shadow:0 2px 6px #263b4c03}
+#pick-screen[data-type="class"] .destination-button[aria-pressed="true"]{background:var(--grade-tint);border-color:var(--grade-line);outline:2px solid var(--grade-line);outline-offset:0;color:var(--grade-ink)}
+#pick-screen .destination-button[aria-pressed="true"]::after{content:'✓';position:absolute;right:9px;top:5px;font-size:16px;font-weight:600;color:#365f4c}
+#pick-screen[data-type="class"] #selected-destination{background:var(--grade-tint);color:var(--grade-ink)}
+#pick-screen #selected-destination{font-size:20px;font-weight:500;border-radius:12px;margin-top:24px}#pick-screen #go{max-width:100%;margin-top:2px}
+#pick-screen #destination-grid h3{font-size:18px;font-weight:500;color:#4e6572;margin:28px 0 14px;letter-spacing:.04em}
+#pick-screen .place-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0 0 24px}
+#pick-screen .place-grid .destination-button{position:relative;background:white;min-height:146px;padding:12px 10px 16px;gap:6px;border-radius:16px;border-color:#dce4e8;font-size:18px;font-weight:500;box-shadow:0 3px 9px #27425204}
+#pick-screen .place-grid .destination-button[aria-pressed="true"]{background:#e6f1eb;border-color:#79a38b;outline:2px solid #aacaba;outline-offset:0}
+#pick-screen .destination-image{width:120px;height:120px;max-width:100%;aspect-ratio:1;object-fit:contain;flex-shrink:0}
+@media(max-width:900px){#pick-screen[data-type="class"] .destination-grid{grid-template-columns:repeat(5,minmax(0,1fr))}#pick-screen .place-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:580px){#pick-screen[data-type="place"] .destination-image{width:112px;height:112px}#pick-screen[data-type="place"] .place-grid .destination-button{min-height:170px}}
+@media(max-width:580px){body:has(#type-screen:not([hidden]))::before{height:320px}.home-panel{padding:12px 0;margin:16px 0 28px}.home-panel .type-options{gap:14px}.home-panel .type-card{grid-template-columns:48px minmax(0,1fr);gap:4px 16px;min-height:170px;padding:22px}.home-panel .card-icon{width:48px;height:48px}.home-panel .type-card strong{font-size:24px}.home-panel .card-description{font-size:16px}.home-panel .card-link{margin-top:10px}.home-panel .intro{font-size:18px;margin-bottom:24px}#pick-screen{padding:8px 0;margin:12px 0}#pick-screen #back-types{margin-bottom:16px}#pick-screen .grade-tabs{width:100%;gap:8px;margin-bottom:22px}#pick-screen .grade-tabs button{min-height:48px;padding:10px 5px}#pick-screen[data-type="class"] .destination-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#pick-screen[data-type="class"] .destination-button{min-height:70px}#pick-screen .place-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#pick-screen .place-grid .destination-button{min-height:140px;padding:12px 8px 16px;gap:4px;font-size:18px}#pick-screen .destination-image{width:76px;height:76px}#pick-screen #selected-destination{font-size:20px;padding:14px}#pick-screen #destination-grid h3{margin-top:24px}}

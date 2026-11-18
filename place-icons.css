@@ -1,0 +1,7 @@
+/* 只調整場地選擇卡片，不影響地圖設施圖示或導航。 */
+#pick-screen .place-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+#pick-screen .place-grid .destination-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;min-height:224px;padding:12px 16px 20px;background:#fff;font-size:20px;font-weight:500;line-height:1.5;border-color:#dbe4e7}
+#pick-screen .place-grid .destination-button:hover{background:#f5f9f8;border-color:#91ada3}
+#pick-screen .place-grid .destination-button[aria-pressed="true"]{background:#edf6f0;border-color:#618b79}
+.destination-image{order:-1;display:block;width:100%;max-width:184px;height:auto;aspect-ratio:1;object-fit:contain;flex-shrink:0}
+@media(max-width:580px){#pick-screen .place-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}#pick-screen .place-grid .destination-button{padding:8px 8px 16px;min-height:184px;gap:0;font-size:18px}.destination-image{max-width:148px}}
