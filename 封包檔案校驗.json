@@ -8,7 +8,7 @@
     },
     {
       "file": "app.js",
-      "sha256": "c5c47ab08e048280983b5ee21e6c03b4bc6bfc62ea9cb022800d420eb16ba7ec"
+      "sha256": "c76ffc00351978668c525cd17c2dd235a07362382811289d64be5c0af39f83c9"
     },
     {
       "file": "assets/fonts/jf-openhuninn-2.1.ttf",
@@ -76,7 +76,7 @@
     },
     {
       "file": "index.html",
-      "sha256": "dc57e13d5bfa15e5bac364ab9dbba201eab07b7c235fceeec3ae7f6a0084c75d"
+      "sha256": "02ec7ddb92e585aa0e7f4c817d53f01cfbd689db76e9d060527ff5bccc731a8f"
     },
     {
       "file": "map-theme.js",
@@ -84,7 +84,7 @@
     },
     {
       "file": "map-view.js",
-      "sha256": "ab773d13036731d2b73532793a6da4ab39874d7f34c28bfebcb4c04287ed8449"
+      "sha256": "4ef9a65f0cd92452b2e63bca9c75446e3a192ca773dd00aedfc85b4fd936bc94"
     },
     {
       "file": "navigation.js",
@@ -100,7 +100,7 @@
     },
     {
       "file": "result-page.css",
-      "sha256": "2427cf32734245aba6cb76d298a188cd9d5026efaa6f6eaba22fe53344191db3"
+      "sha256": "6c96eda266211d1d29ea51ac6c69ad93eadc212cab2813512ce27b97336adc15"
     },
     {
       "file": "routing.js",
@@ -125,6 +125,10 @@
     {
       "file": "typography.css",
       "sha256": "857b8b53f5267e3f58633397eba48b0d3473c9ee5029d939711375ccb03d1863"
+    },
+    {
+      "file": "手機手勢測試說明.txt",
+      "sha256": "50054618266d28965e74effc8fcead902dd7295eb8fede9f1e5af8722f0c09a9"
     },
     {
       "file": "請先閱讀.txt",
