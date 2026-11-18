@@ -34,9 +34,10 @@ function navigationView(D, path) {
    instructions.push('沿福和樓右側走廊，經天橋前往學務處與健康中心之間。');
    if(dest.floor===1)instructions.push(...(zone==='F'||zone==='G'||dest.id==='F1-L'?['走旋轉樓梯左側的一樓平面通道，前往綜合大樓。']:[]));
    else if(zone==='C')instructions.push(`沿旋轉樓梯上至${dest.floor}樓；每層續走第二段階梯，不走往後棟的斜坡。`);
-   else if(dest.id==='F3-R科技中心'&&has('C-platform-2-3')&&!has('F2-SF')){
+   else if(dest.floor===3&&has('C-platform-2-3')&&!has('F3-SC')&&!has('F2-SF')){
+    // 科技中心、730：旋轉樓梯直上三樓後棟出口，不繞二樓圖書館。
     instructions.push('沿旋轉樓梯上至三樓後棟出口。');
-    instructions.push('經小斜坡，沿後棟通道前往科技中心。');
+    instructions.push(`經小斜坡，沿後棟通道前往${dest.name}${dest.type==='班級教室'?'教室':''}。`);
    }
    else if(has('F1-L') && path.some(([,e])=>e?.type==='電梯')) {
     instructions.push('走旋轉樓梯左側的一樓平面通道，前往綜合大樓電梯。');

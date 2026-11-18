@@ -12,7 +12,7 @@
     },
     {
       "file": "app.js",
-      "sha256": "fa3f4876fb03e1cb03491ce5b82373c7093e150fbf6929eeb46eb03ac1a9e613"
+      "sha256": "a86a05422510d55b29865a546c638d0c18675a93f2ca418365f8c23370d98e06"
     },
     {
       "file": "assets/fonts/OFL-LICENSE.txt",
@@ -76,11 +76,11 @@
     },
     {
       "file": "facilities.js",
-      "sha256": "95228a057bc229ff9718c70175c6f18456f565aa7fde7ab65a93651443b3c075"
+      "sha256": "36e26c2179134ae8fa4df9d2e20793aba59b32eb0e896dc1bbd42e4930e6dfc8"
     },
     {
       "file": "index.html",
-      "sha256": "d218bdcec80ff1d2cf9975d46e5b0dc07fd7de75cb1198dbd8354fb98fcd6bcf"
+      "sha256": "75c20e67863862e672cc6f687d31b044878f32fb9913141f19c7c7afe42a7d4b"
     },
     {
       "file": "map-theme.js",
@@ -96,7 +96,7 @@
     },
     {
       "file": "navigation.js",
-      "sha256": "e352f4607bfc5eaacb98b4b1ca5c94a922f88565315aae4a10f49245359a8b48"
+      "sha256": "8d1f8814a922995ff7d5038d8375d0162cb1d554fad6b50432ad0558266935d9"
     },
     {
       "file": "place-icons.css",
@@ -112,7 +112,7 @@
     },
     {
       "file": "runtime/current.js",
-      "sha256": "e2a4e3263582d1e20a3b5d7fc7aa88b9d24facfdd8ef28b0d4402e00dc73a183"
+      "sha256": "caf9f23da091c7bd8a1ef4ae294f3d29c1447d38070947b2a71218c9ca750a24"
     },
     {
       "file": "selection.js",
@@ -132,11 +132,11 @@
     },
     {
       "file": "手機手勢測試說明.txt",
-      "sha256": "623e466e5b0f2d7dedbfc97ddff790920b2e8f4157684d0ffe8a5fc08a67a915"
+      "sha256": "6d4d3e0f10eb3072ca76e8b4dd41eaf393998743b5e7df362b050ff97e9538e0"
     },
     {
       "file": "請先閱讀.txt",
-      "sha256": "c2877dbadf2bccb627293be84546ef4093bbd27a5ca0522c3b607ce662a7faba"
+      "sha256": "b4aafed8951d5a559c8d8124a05782d6b25fa70108629c4a37946ff378941c95"
     }
   ]
 }

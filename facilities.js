@@ -24,7 +24,10 @@ function facilityMovements(D,path) {
   // 分流平台的樓層欄位不是高度；若下一段是斜坡，取實際抵達的樓層。
   if(N.get(path[j][0]).type==='分流節點'&&path[j+1]?.[1]?.type==='斜坡')target=N.get(path[j+1][0]).floor;
   const label=kind==='電梯'?`${dir>0?'↑':'↓'} 搭乘電梯至${chinese[target]||target}樓`:`${dir>0?'↑ 上':'↓ 下'}至${chinese[target]||target}樓`;
-  for(let k=i-1;k<=j;k++){const n=N.get(path[k][0]);if(['樓梯','電梯'].includes(n.type)){if(!result.has(n.id))result.set(n.id,[]);if(!result.get(n.id).includes(label))result.get(n.id).push(label);}}
+  for(let k=i-1;k<=j;k++){const n=N.get(path[k][0]);if(['樓梯','電梯'].includes(n.type)){
+   // 抵達樓層只標示出口，避免在目標樓層仍顯示「上至○樓」造成誤會。
+   const text=k===j&&k!==i-1?(kind==='電梯'?'電梯出口':'樓梯出口'):label;
+   if(!result.has(n.id))result.set(n.id,[]);if(!result.get(n.id).includes(text))result.get(n.id).push(text);}}
   i=j;
  }
  return result;
@@ -56,8 +59,13 @@ function movementLabelMarkup(n,texts,D,occupied=[],options={}) {
  const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
  let markup='';
  const interactive=Number.isInteger(options.targetFloor);
- for(const text of texts){const textWidth=text.includes('電梯')?202:112,w=textWidth+(interactive?30:0),h=28,candidates=[[20,-42],[-w-20,-42],[20,18],[-w-20,18],[-w/2,-65],[-w/2,35]].map(([dx,dy])=>({x:Math.max(4,Math.min(996-w,n.x+dx)),y:Math.max(4,Math.min(768,n.y+dy)),w,h}));
-  candidates.sort((a,b)=>[...obstacles,...occupied].filter(o=>overlap(a,o)).length-[...obstacles,...occupied].filter(o=>overlap(b,o)).length);
+ const segs=options.avoid||[],points=options.avoidPoints||[];
+ const segHits=r=>segs.filter(([x1,y1,x2,y2])=>{const k=Math.max(2,Math.ceil(Math.hypot(x2-x1,y2-y1)/4));for(let i=0;i<=k;i++){const x=x1+(x2-x1)*i/k,y=y1+(y2-y1)*i/k;if(x>r.x-6&&x<r.x+r.w+6&&y>r.y-6&&y<r.y+r.h+6)return true;}return false;}).length;
+ const pointHits=r=>points.filter(([x,y])=>x>r.x-24&&x<r.x+r.w+24&&y>r.y-24&&y<r.y+r.h+24).length;
+ // 分數越低越好：壓到路線或目的地／起點最嚴重，其次是其他標籤，再其次是教室文字；同分時離設施越近越好。
+ const score=r=>segHits(r)*100+pointHits(r)*100+occupied.filter(o=>overlap(r,o)).length*20+obstacles.filter(o=>overlap(r,o)).length*3;
+ for(const text of texts){const textWidth=text.includes('出口')?92:text.includes('電梯')?202:112,w=textWidth+(interactive?30:0),h=28,candidates=[[20,-42],[-w-20,-42],[20,18],[-w-20,18],[-w/2,-65],[-w/2,35],[24,-14],[-w-24,-14],[20,-78],[-w-20,-78],[20,52],[-w-20,52],[-w/2,-100],[-w/2,70]].map(([dx,dy],order)=>({x:Math.max(4,Math.min(996-w,n.x+dx)),y:Math.max(4,Math.min(768,n.y+dy)),w,h,order}));
+  candidates.sort((a,b)=>score(a)-score(b)||a.order-b.order);
   const p=candidates[0];occupied.push(p);
   const attributes=interactive?`class="map-transfer" role="button" tabindex="0" data-transfer-floor="${options.targetFloor}" data-label-x="${p.x}" data-label-y="${p.y}" data-label-width="${w}" data-label-height="${h}" aria-label="${text}，查看 ${options.targetFloor}F 路線"`:`role="img" aria-label="${text}"`;
   const hit=interactive?`<rect class="map-transfer-hit" x="${p.x}" y="${p.y}" width="${w}" height="${h}" fill="transparent" pointer-events="all"/><rect class="map-transfer-focus" x="${p.x-3}" y="${p.y-3}" width="${w+6}" height="${h+6}" rx="7" fill="none"/>`:'';

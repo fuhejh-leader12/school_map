@@ -77,10 +77,10 @@ function renderMaps() {
     section.className='floor-panel';panels.push(section);
     const tab=document.createElement('button'),floorText=document.createElement('span'),stageText=document.createElement('span');floorText.className='stage-floor';floorText.textContent=`${floor}F`;stageText.className='stage-label';stageText.textContent=segment.title;tab.append(floorText,stageText);tab.setAttribute('data-floor',floor);tab.setAttribute('aria-label',`${floor}F｜${segment.title}`);tab.onclick=()=>showStage(segmentIndex,true);buttons.push(tab);tabs.append(tab);section.hidden=panels.length!==1;
     const hint=document.createElement('p');hint.className='floor-hint';hint.textContent=segment.hint;section.append(heading,hint);
-    svg.setAttribute('viewBox','0 0 1000 800'); svg.setAttribute('aria-label',`${floor}樓候選路線示意`);const focusPoints=displayOn.filter(n=>n.floor===floor).map(n=>[n.x,n.y]);
+    svg.setAttribute('viewBox','0 0 1000 800'); svg.setAttribute('aria-label',`${floor}樓候選路線示意`);const focusPoints=displayOn.filter(n=>n.floor===floor).map(n=>[n.x,n.y]),floorSegs=[];
     for (let i=1;i<on.length;i++) {
       const a=displayOn[i-1],b=displayOn[i],edge=route[i][1]; if (a.floor!==floor || b.floor!==floor || ((a.type==='分流節點' || b.type==='分流節點') && edge.type!=='斜坡')) continue;
-      for(const [from,to] of mapDisplayEdges(a,b,edge,themedMap)){focusPoints.push([from.x,from.y],[to.x,to.y]);
+      for(const [from,to] of mapDisplayEdges(a,b,edge,themedMap)){focusPoints.push([from.x,from.y],[to.x,to.y]);{const c=mapLineCoordinates(from,to,edge,themedMap);floorSegs.push([+c.x1,+c.y1,+c.x2,+c.y2]);}
       const line=document.createElementNS(ns,'line');
       for (const [k,v] of Object.entries({...mapLineCoordinates(from,to,edge,themedMap),stroke:'#0879ba','stroke-width':7,'stroke-linecap':'round',opacity:.9})) line.setAttribute(k,v);
       svg.append(line);
@@ -101,7 +101,8 @@ function renderMaps() {
       focusPoints.push([n.x,n.y]);const g=document.createElementNS(ns,'g');g.innerHTML=facilityMarkup(n,true);svg.append(g);
     }
     const occupied=[];
-    for(const [id,texts] of movements){const n=displayNodes.get(id);if(n.floor!==floor)continue;const targetFloor=usedFacilities.has(id)?transferTarget(segment,id):null,g=document.createElementNS(ns,'g');g.innerHTML=movementLabelMarkup(n,texts,displayData,occupied,{targetFloor});
+    for(const [id,texts] of movements){const n=displayNodes.get(id);if(n.floor!==floor)continue;const targetFloor=usedFacilities.has(id)?transferTarget(segment,id):null,g=document.createElementNS(ns,'g');const keyPoints=[];const destNode=displayNodes.get(route.at(-1)[0]);if(destNode?.floor===floor)keyPoints.push([destNode.x,destNode.y]);const st=floorStart(DATA,route,floor);if(st){const sn=displayNodes.get(st.node.id);if(sn&&sn.id!==id)keyPoints.push([sn.x,sn.y]);}
+      g.innerHTML=movementLabelMarkup(n,texts,displayData,occupied,{targetFloor,avoid:floorSegs,avoidPoints:keyPoints});
       for(const control of g.querySelectorAll?.('[data-transfer-floor]')||[]){const index=segments.findIndex(s=>s.floor===Number(control.getAttribute('data-transfer-floor')));const activate=e=>{e.preventDefault();e.stopPropagation();if(index>=0)showStage(index,true);};control.addEventListener('click',activate);control.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')activate(e);});control.addEventListener('pointerdown',e=>e.stopPropagation());}
       svg.append(g);}
     const start=floorStart(DATA,route,floor);
