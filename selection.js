@@ -11,7 +11,7 @@ const CAMPUS_PLACES=[
 ];
 function destinationList(D,type,grade,query='') {
  if(type==='place')return CAMPUS_PLACES.map(p=>({config:p,node:D.nodes.find(n=>n.id===p.id&&n.type==='場地')})).filter(({config,node})=>node&&!D.excluded_labels.includes(node.name)&&(config.label.includes(query.trim())||node.name.includes(query.trim()))).map(({node})=>node);
- return D.nodes.filter(n=>!D.excluded_labels.includes(n.name)&&n.type==='班級教室'&&/^[789]\d{2}$/.test(n.name)&&n.name[0]===String(grade)&&n.name.includes(query.trim())).sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant',{numeric:true}));
+ return D.nodes.filter(n=>!D.excluded_labels.includes(n.name)&&n.type==='班級教室'&&/^[789](0[1-9]|[12]\d|30)$/.test(n.name)&&n.name[0]===String(grade)&&n.name.includes(query.trim())).sort((a,b)=>a.name.localeCompare(b.name,'zh-Hant',{numeric:true}));
 }
 function startSelectionFlow() {
  const $=id=>document.querySelector('#'+id),screens=[$('type-screen'),$('pick-screen'),$('result-screen')];

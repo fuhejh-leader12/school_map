@@ -62,3 +62,13 @@
 @media(min-width:700px){#maps .map-toolbar{position:absolute;right:24px;top:18px;margin:0}}
 @media(orientation:landscape) and (max-height:600px){.large-map-dialog #maps{grid-template-columns:240px minmax(0,1fr)}.large-map-dialog #maps .floor-tabs{display:flex}.large-map-dialog #maps .floor-tabs button{flex:1;min-width:0;min-height:44px}.large-map-dialog #maps .stage-label{display:none}}
 @media(max-width:580px){#result-screen .map-panel{padding:14px 10px}#result-screen .map-panel>h2{font-size:22px;margin-bottom:12px}#maps .map-toolbar{margin-bottom:14px}#maps .floor-tabs{gap:6px;margin-bottom:12px}#maps .floor-tabs button{padding:8px 3px;min-height:72px}#maps .viewing-floor{font-size:20px}#maps .map-context{margin-top:10px}#maps .floor-hint{margin-bottom:12px;font-size:18px;line-height:1.5}#maps .next-step{font-size:18px}#maps .next-floor{font-size:18px;padding:12px 6px;white-space:nowrap}.map-legend{gap:8px 14px;margin-top:16px}.full-route{margin-top:16px}.full-route #steps{padding-left:6px;padding-right:6px}}
+/* 路線聚焦版：1F先全景再拉近、小縮圖、看整層 */
+#maps .map-stage.map-animating{transition:transform .85s cubic-bezier(.3,.1,.2,1)}
+#maps .map-minimap{position:absolute;right:8px;bottom:8px;z-index:2;width:30%;min-width:96px;max-width:190px;aspect-ratio:5/4;min-height:0;padding:0;border:1.5px solid #9fb4bd;border-radius:8px;background:#fff;box-shadow:0 2px 8px rgba(40,61,75,.22);overflow:hidden;cursor:pointer}
+#maps .map-minimap img,#maps .map-minimap svg{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:contain;pointer-events:none}
+#maps .map-minimap .map-minimap-frame{fill:rgba(201,71,59,.10);stroke:#c9473b;stroke-width:2.5;vector-effect:non-scaling-stroke}
+#maps .map-minimap span{position:absolute;left:0;right:0;bottom:0;padding:0;background:rgba(53,93,112,.82);color:#fff;font-size:12px;line-height:1.45;text-align:center;font-weight:500}
+#maps .map-toolbar .map-mode-button[aria-pressed="true"]{background:#355d70;border-color:#355d70;color:#fff}
+@media(prefers-reduced-motion:reduce){#maps .map-stage.map-animating{transition:none}}
+#maps .map-focus-cta{position:absolute;z-index:3;display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:6px 14px 6px 10px;border:none;border-radius:999px;background:#355d70;color:#fff;font-size:15px;font-weight:600;line-height:1.2;white-space:nowrap;box-shadow:0 3px 10px rgba(40,61,75,.3);cursor:pointer}
+#maps .map-focus-cta:active{background:#2a4c5c}

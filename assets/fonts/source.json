@@ -2,7 +2,10 @@
   "source": "https://github.com/justfont/open-huninn-font/blob/master/font/jf-openhuninn-2.1.ttf",
   "license": "SIL Open Font License 1.1",
   "version": "2.1",
-  "bytes": 4911464,
-  "sha256": "9d5bf4932d31fe94c18cd8cfddc98bc1b14ce10f4e354c682179db290a99c825",
-  "conversion": "無轉檔、無子集化，原始TTF直接嵌入"
+  "bytes": 196076,
+  "sha256": "917bb913f5a29596bca633e3b7af59db28866d371c4f2a2970f5a27f022c80f2",
+  "conversion": "由原始jf-openhuninn-2.1.ttf子集化，只保留網站程式與資料中出現的字（約580字），字形未改動。因OFL保留字型名稱（open huninn、huninn）規定，修改版改名為Fuhe Map Rounded；未收錄的字會自動改用系統字體。",
+  "file": "fuhe-map-rounded-subset.ttf",
+  "original_sha256": "9d5bf4932d31fe94c18cd8cfddc98bc1b14ce10f4e354c682179db290a99c825",
+  "font_name": "Fuhe Map Rounded"
 }

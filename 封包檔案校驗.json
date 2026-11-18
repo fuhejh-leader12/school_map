@@ -1,22 +1,18 @@
 {
   "date": "20261118",
-  "variant": "GitHubPages測試版",
+  "variant": "GitHubPages測試版_路線聚焦",
   "files": [
     {
       "file": ".nojekyll",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "file": "README.md",
+      "sha256": "d2c0750f7c3c5b05660af1b81e9dcf60a7c048362f1a73a8fc9a3da1b40e47dd"
+    },
+    {
       "file": "app.js",
-      "sha256": "c76ffc00351978668c525cd17c2dd235a07362382811289d64be5c0af39f83c9"
-    },
-    {
-      "file": "assets/fonts/jf-openhuninn-2.1.ttf",
-      "sha256": "9d5bf4932d31fe94c18cd8cfddc98bc1b14ce10f4e354c682179db290a99c825"
-    },
-    {
-      "file": "assets/fonts/map-font.js",
-      "sha256": "001edf5f07ba00f8ff45279c5009a3027ece4fdb4c69914629d535a34295a821"
+      "sha256": "ede014a8f117259a2d700599357bebb9199cde93d11930ca0b19e5718b2f1918"
     },
     {
       "file": "assets/fonts/OFL-LICENSE.txt",
@@ -24,11 +20,19 @@
     },
     {
       "file": "assets/fonts/README.md",
-      "sha256": "1c9700b8c9a751706cd424a4362b24eb50e7843dd19a634386fca028e5c4e21f"
+      "sha256": "6d57d0696f6b88950e1236bf2e51f507f82a59d7cffaec8e597b92c0712d7fe2"
+    },
+    {
+      "file": "assets/fonts/fuhe-map-rounded-subset.ttf",
+      "sha256": "917bb913f5a29596bca633e3b7af59db28866d371c4f2a2970f5a27f022c80f2"
+    },
+    {
+      "file": "assets/fonts/map-font.js",
+      "sha256": "e6e337e8e1a45feba2091cb9a661532d0df64005c52f5d923d5956d669f29f83"
     },
     {
       "file": "assets/fonts/source.json",
-      "sha256": "aa8e9756b4c5e098f6da18ee6fb875c4493c2edfd561ebf4807d1e0fa3619a5f"
+      "sha256": "a9dca0a3b8d3ad091e009ca69c98144fe1881bef3ac51bbff37383983171a200"
     },
     {
       "file": "assets/place-icons/01_academic_office.png",
@@ -76,7 +80,7 @@
     },
     {
       "file": "index.html",
-      "sha256": "02ec7ddb92e585aa0e7f4c817d53f01cfbd689db76e9d060527ff5bccc731a8f"
+      "sha256": "7436076477857205fd5488f6fc9fc61d971d0ad6920e1e3aabea5d47cf3f6b29"
     },
     {
       "file": "map-theme.js",
@@ -84,7 +88,7 @@
     },
     {
       "file": "map-view.js",
-      "sha256": "4ef9a65f0cd92452b2e63bca9c75446e3a192ca773dd00aedfc85b4fd936bc94"
+      "sha256": "94b15aab1e47db2baebe4c77e8eb980242c79b7e8bc4a530c9cb6e92a35c3841"
     },
     {
       "file": "navigation.js",
@@ -95,12 +99,8 @@
       "sha256": "088864e5a7505f680257b7a6042db761cc5dc869fad890eea5950c106a69c3e7"
     },
     {
-      "file": "README.md",
-      "sha256": "d2c0750f7c3c5b05660af1b81e9dcf60a7c048362f1a73a8fc9a3da1b40e47dd"
-    },
-    {
       "file": "result-page.css",
-      "sha256": "6c96eda266211d1d29ea51ac6c69ad93eadc212cab2813512ce27b97336adc15"
+      "sha256": "f3358ad3dcf0ade0fb3a07833244a569f80c1d6801a5d9d4c5e6e588cb7e1cce"
     },
     {
       "file": "routing.js",
@@ -112,7 +112,7 @@
     },
     {
       "file": "selection.js",
-      "sha256": "3a94c548a7bbd1c7223f34b806ed1d458469e21083a74e7903d94affb321b108"
+      "sha256": "262dd36084b743bde94d324b24d2b5d322fe53be60cd2bfb602585d35cdfb3eb"
     },
     {
       "file": "style.css",
@@ -128,11 +128,11 @@
     },
     {
       "file": "手機手勢測試說明.txt",
-      "sha256": "50054618266d28965e74effc8fcead902dd7295eb8fede9f1e5af8722f0c09a9"
+      "sha256": "3e7203ea06343fe860fbed81dff8897da21bc9ad1d451dfe90d74239f8ee0a35"
     },
     {
       "file": "請先閱讀.txt",
-      "sha256": "55b4765fcb86c8202219d0b636ee44fc79aa13c1cc75af84bf8d7c30bc97fe78"
+      "sha256": "85208bb3c39ff27602fbcec2bee1befc7f52aff8f498e82f71d1220ff6c812d9"
     }
   ]
 }

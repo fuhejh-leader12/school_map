@@ -49,5 +49,29 @@ function bindMapGestures(viewport,camera,update,{isLarge=()=>false}={}){
  for(const name of ['pointerup','pointercancel','lostpointercapture'])listen(name,e=>{if(mouse?.id===e.pointerId)mouse=null;});
  return {cancel,dispose(){cancel();for(const [name,fn,options] of listeners)viewport.removeEventListener(name,fn,options);}};
 }
+// 路線聚焦：把地圖座標範圍（viewBox 1000×800）放大置中到目前視窗。
+function focusMapCamera(camera,box,{maxScale=2.6}={}){
+ const W=camera.width,H=camera.height,fit=Math.min(W/1000,H/800),ox=(W-1000*fit)/2,oy=(H-800*fit)/2;
+ const bw=Math.max(1,box.x1-box.x0),bh=Math.max(1,box.y1-box.y0),cx=(box.x0+box.x1)/2,cy=(box.y0+box.y1)/2;
+ const scale=Math.max(1,Math.min(maxScale,W/(bw*fit),H/(bh*fit))),px=ox+cx*fit,py=oy+cy*fit;
+ camera.scale=scale;camera.x=-(px-W/2)*scale/W*100;camera.y=-(py-H/2)*scale/H*100;camera.clamp();
+}
+// 目前畫面在整層地圖上的可見範圍（供小縮圖畫框）。
+function visibleMapRect(camera){
+ const W=camera.width,H=camera.height,fit=Math.min(W/1000,H/800),ox=(W-1000*fit)/2,oy=(H-800*fit)/2,tx=camera.x/100*W,ty=camera.y/100*H,s=camera.scale;
+ const toMap=(sx,sy)=>[((sx-W/2-tx)/s+W/2-ox)/fit,((sy-H/2-ty)/s+H/2-oy)/fit];
+ const [x0,y0]=toMap(0,0),[x1,y1]=toMap(W,H);
+ const cx0=Math.max(0,x0),cy0=Math.max(0,y0),cx1=Math.min(1000,x1),cy1=Math.min(800,y1);
+ return {x:cx0,y:cy0,width:Math.max(0,cx1-cx0),height:Math.max(0,cy1-cy0)};
+}
+// 由路線、設施及轉乘標籤算出本段要顯示的範圍。
+function routeFocusBox(points,{padding=70,minWidth=380,minHeight=300,includeBottom=false}={}){
+ if(!points.length)return {x0:0,y0:0,x1:1000,y1:800};
+ let x0=Math.min(...points.map(p=>p[0]))-padding,x1=Math.max(...points.map(p=>p[0]))+padding,y0=Math.min(...points.map(p=>p[1]))-padding,y1=Math.max(...points.map(p=>p[1]))+padding;
+ if(includeBottom)y1=800;
+ if(x1-x0<minWidth){const c=(x0+x1)/2;x0=c-minWidth/2;x1=c+minWidth/2;}
+ if(y1-y0<minHeight){const c=(y0+y1)/2;y0=c-minHeight/2;y1=c+minHeight/2;}
+ return {x0:Math.max(0,x0),y0:Math.max(0,y0),x1:Math.min(1000,x1),y1:Math.min(800,y1)};
+}
 function bindMapDrag(...args){return bindMapGestures(...args);}
-if(typeof module!=='undefined')module.exports={floorStart,mapCamera,mapGestureStart,applyMapGesture,bindMapGestures,bindMapDrag};
+if(typeof module!=='undefined')module.exports={focusMapCamera,visibleMapRect,routeFocusBox,floorStart,mapCamera,mapGestureStart,applyMapGesture,bindMapGestures,bindMapDrag};
