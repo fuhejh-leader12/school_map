@@ -16,7 +16,7 @@ function destinationList(D,type,grade,query='') {
 function startSelectionFlow() {
  const $=id=>document.querySelector('#'+id),screens=[$('type-screen'),$('pick-screen'),$('result-screen')];
  let type='class',grade=7,selected=null;
- const show=i=>screens.forEach((screen,index)=>screen.hidden=index!==i);
+ const show=i=>{screens.forEach((screen,index)=>screen.hidden=index!==i);document.body.dataset.screen=['type','pick','result'][i];window.scrollTo?.(0,0);};
  const title=n=>n.type==='班級教室'?`${n.name} 教室`:(CAMPUS_PLACES.find(p=>p.id===n.id)?.label||n.name);
  function clearSelection(){selected=null;end.value='';$('selected-destination').textContent='請選擇目的地';$('go').disabled=true;}
  function render() {

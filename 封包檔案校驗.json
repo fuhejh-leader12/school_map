@@ -12,7 +12,7 @@
     },
     {
       "file": "app.js",
-      "sha256": "ede014a8f117259a2d700599357bebb9199cde93d11930ca0b19e5718b2f1918"
+      "sha256": "e0f37e294c80e6c0042e2bf52ef207288a90bd54c6586a1e01f9ec92c06865cd"
     },
     {
       "file": "assets/fonts/OFL-LICENSE.txt",
@@ -80,7 +80,7 @@
     },
     {
       "file": "index.html",
-      "sha256": "7436076477857205fd5488f6fc9fc61d971d0ad6920e1e3aabea5d47cf3f6b29"
+      "sha256": "a3d023341b4c810359975ac4cc92d65e659e725a26a9ae58ca4bda6a47bb8962"
     },
     {
       "file": "map-theme.js",
@@ -89,6 +89,10 @@
     {
       "file": "map-view.js",
       "sha256": "94b15aab1e47db2baebe4c77e8eb980242c79b7e8bc4a530c9cb6e92a35c3841"
+    },
+    {
+      "file": "mobile-compact.css",
+      "sha256": "97d0fdfa0d548d52b988809ff2ad8cfcbbea973d15c009c4637dc3300d97e995"
     },
     {
       "file": "navigation.js",
@@ -112,7 +116,7 @@
     },
     {
       "file": "selection.js",
-      "sha256": "262dd36084b743bde94d324b24d2b5d322fe53be60cd2bfb602585d35cdfb3eb"
+      "sha256": "58657c2f8d0eda319363c94d7b85d60262a7e86e2ce336659347fcd249e74de3"
     },
     {
       "file": "style.css",
@@ -128,11 +132,11 @@
     },
     {
       "file": "手機手勢測試說明.txt",
-      "sha256": "3e7203ea06343fe860fbed81dff8897da21bc9ad1d451dfe90d74239f8ee0a35"
+      "sha256": "bb5eb9661a04026b8f8b7f82c9462da2d1fef0c9ddb68671526f6fcb75393bf0"
     },
     {
       "file": "請先閱讀.txt",
-      "sha256": "85208bb3c39ff27602fbcec2bee1befc7f52aff8f498e82f71d1220ff6c812d9"
+      "sha256": "6f8f2ad22223c5ac09c48e347e1e4cfa72e1a1030bf353e478a87003015a8f8f"
     }
   ]
 }

@@ -1,0 +1,48 @@
+/* 手機結果頁精簡版面：地圖為主角。只影響700px以下的結果頁，電腦版與大地圖不變。 */
+.stage-text{display:none}
+@media(max-width:700px){
+ body[data-screen="result"] .site-header{flex-wrap:nowrap;align-items:center;gap:10px;padding:10px 0}
+ body[data-screen="result"] .school-brand{flex-basis:auto;gap:8px;align-items:center;min-width:0}
+ body[data-screen="result"] .school-logo{width:30px}
+ body[data-screen="result"] .school-name{display:none}
+ body[data-screen="result"] .site-header h1{font-size:17px;line-height:1.3;margin:0;white-space:nowrap}
+ body[data-screen="result"] .origin{margin-left:auto;font-size:14px;line-height:1.4;padding:3px 10px;white-space:nowrap}
+ body[data-screen="result"] .notice{padding:6px 0;font-size:13px;line-height:1.5}
+ body[data-screen="result"] .notice span{font-size:12px;padding:0 6px;margin-right:6px}
+ body[data-screen="result"] .result-heading{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 10px}
+ body[data-screen="result"] .result-heading .eyebrow{display:none}
+ body[data-screen="result"] .result-heading h2{font-size:22px;line-height:1.3}
+ body[data-screen="result"] #choose-again{flex:none;min-height:44px;padding:6px 14px;font-size:15px}
+ body[data-screen="result"] #choose-again .wide-only{display:none}
+ #result-screen .map-panel>h2{display:none}
+ #result-screen .map-panel{padding:12px 10px}
+ #result-screen #maps{display:flex;flex-direction:column}
+ #result-screen #maps>.map-gesture-note,#result-screen #maps>.map-context{display:none}
+ #result-screen #maps .floor-tabs{margin:0 0 10px}
+ #result-screen #maps .floor-hint,#result-screen #maps .next-step{display:none}
+ #result-screen #maps .stage-text{display:block;margin:12px 2px 0;font-size:18px;line-height:1.55;color:#283d4b;font-weight:500}
+ /* 工具列移到地圖下方，只留「放大查看地圖」 */
+ #result-screen #maps>.map-toolbar{order:10;margin:14px 0 0;display:flex}
+ #result-screen #maps>.map-toolbar>button:not(.open-large-map),#result-screen #maps>.map-toolbar>span{display:none}
+ #result-screen #maps>.map-toolbar>.open-large-map{flex:1;min-height:44px;font-size:16px}
+ #result-screen .map-legend{margin-top:16px;font-size:15px}
+ #result-screen .view-notice{font-size:14px}
+ /* 第一次進入時的短暫手勢提示 */
+ #maps .map-touch-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;padding:5px 12px;border-radius:999px;background:rgba(40,61,75,.85);color:#fff;font-size:14px;line-height:1.4;white-space:nowrap;pointer-events:none;transition:opacity .5s}
+ #maps .map-touch-hint.is-fading{opacity:0}
+}
+.wide-only{display:inline}
+/* 「放大查看地圖」：手機在地圖正下方顯示醒目的整排按鈕 */
+.open-large-map-inline{display:none}
+@media(max-width:700px){
+ #result-screen #maps>.map-toolbar{display:none!important}
+ #result-screen #maps .open-large-map-inline{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;margin:10px 0 0;padding:10px 14px;border:2px solid #2f6b55;border-radius:12px;background:#e3f1ea;color:#1f5541;font-size:18px;font-weight:600;line-height:1.3}
+ #result-screen #maps .open-large-map-inline:active{background:#cfe7da}
+}
+.large-map-dialog .open-large-map-inline{display:none!important}
+/* 電腦版工具列上的按鈕也加強 */
+#maps .map-toolbar .open-large-map{background:#2f6b55;border-color:#2f6b55;color:#fff;font-weight:600}
+/* 整頁大地圖（手機直向）：拿掉重複資訊，讓地圖區更高 */
+@media(max-width:700px) and (orientation:portrait){
+ .large-map-dialog #maps .map-context,.large-map-dialog #maps .map-gesture-note{display:none}
+}

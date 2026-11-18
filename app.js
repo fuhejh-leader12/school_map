@@ -5,6 +5,7 @@ const originLabel=document.querySelector('#origin-label');
 if(originLabel){const origin=nodes.get(startId);originLabel.textContent=origin?`起點：${origin.floor}樓${origin.name}`:'起點資訊尚未提供';}
 const end = document.querySelector('#end'), yard = document.querySelector('#yard'), steps = document.querySelector('#steps'), maps = document.querySelector('#maps');
 let route = [];
+let touchHintShown=false;
 let disposeMapInteractions=()=>{};
 function label(n) { return `${n.floor}樓｜${n.building.replace('A–H 連通走道','蘭蕙樓與懿智樓間走道')}｜${n.name}`; }
 function fill(query, preferred) {
@@ -36,7 +37,13 @@ function renderMaps() {
   const wantsFocus=()=>camera.width<700;
   function syncBounds(){const b=viewports[current]?.getBoundingClientRect?.();if(b&&b.width>0&&b.height>0){camera.setBounds(b.width,b.height);return true;}return false;}
   function cancelIntro(){introTimers.forEach(clearTimeout);introTimers=[];stages.forEach(st=>st.classList?.remove('map-animating'));}
-  function applyView(){syncBounds();if(viewMode==='focus'&&focusBoxes[current])focusMapCamera(camera,focusBoxes[current],{maxScale:focusMaxScale(current)});else if(viewMode==='whole')camera.reset();updateCamera();}
+  function applyView(){syncBounds();if(viewMode==='fill'){fillPage();updateCamera();return;}if(viewMode==='focus'&&focusBoxes[current])focusMapCamera(camera,focusBoxes[current],{maxScale:focusMaxScale(current)});else if(viewMode==='whole')camera.reset();updateCamera();}
+  function fillPage(){
+    // 整頁大地圖（手機直向）：放大到地圖填滿畫面高度，並以本段路線為中心。
+    const W=camera.width,H=camera.height,fit=Math.min(W/1000,H/800),ox=(W-1000*fit)/2,b=focusBoxes[current]||{x0:0,x1:1000};
+    const scale=Math.max(1,Math.min(3,H/(800*fit))),cx=(b.x0+b.x1)/2,px=ox+cx*fit;
+    camera.scale=scale;camera.x=-(px-W/2)*scale/W*100;camera.y=0;camera.clamp();
+  }
   function setMode(mode){cancelIntro();viewMode=mode;applyView();}
   function enterStage(){
     // 手機：1F停在整層，由家長按「放大看路線」決定是否拉近；2F以後直接對準路線。電腦：一律整層。
@@ -105,23 +112,26 @@ function renderMaps() {
     const mini=document.createElement('button'),miniImg=document.createElement('img'),miniSvg=svg.cloneNode(true),miniFrame=document.createElementNS(ns,'rect'),miniCaption=document.createElement('span');mini.type='button';mini.className='map-minimap';mini.hidden=true;mini.setAttribute('aria-label',`${floor}樓整層小地圖，點一下看整層`);miniImg.src=img.src;miniImg.alt='';miniImg.draggable=false;miniSvg.removeAttribute('aria-label');miniSvg.setAttribute('aria-hidden','true');miniFrame.setAttribute('class','map-minimap-frame');miniSvg.append(miniFrame);miniCaption.textContent='看整層';mini.append(miniImg,miniSvg,miniCaption);mini.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setMode('whole');});mini.addEventListener('pointerdown',e=>e.stopPropagation());mini.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});wrapper.append(mini);minimaps.push({root:mini,frame:miniFrame});
     const cta=document.createElement('button');cta.type='button';cta.className='map-focus-cta';cta.hidden=true;cta.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M10.5 7.5v6M7.5 10.5h6"/></svg>放大看路線';cta.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();animateTo('focus');});cta.addEventListener('pointerdown',e=>e.stopPropagation());cta.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});wrapper.append(cta);focusCtas.push(cta);
     gestures.push(bindMapGestures(wrapper,camera,()=>{cancelIntro();viewMode='free';updateCamera();},{isLarge:()=>largeMode}));section.append(wrapper);
+    const bigMap=document.createElement('button');bigMap.type='button';bigMap.className='open-large-map-inline';bigMap.setAttribute('aria-haspopup','dialog');bigMap.innerHTML='<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>放大查看地圖（整頁）';bigMap.onclick=()=>openLargeMap();section.append(bigMap);
+    const stagePara=document.createElement('p');stagePara.className='stage-text';stagePara.textContent=[segment.hint,segment.nextText].filter(Boolean).join('');section.append(stagePara);
     const nextStep=document.createElement('p');nextStep.className='next-step';nextStep.textContent=segment.nextText;section.append(nextStep);
     const nextIndex=floorNumbers.indexOf(floor)+1;
     if(nextIndex<floorNumbers.length){const next=document.createElement('button');next.className='next-floor';next.textContent=`下一段：查看 ${floorNumbers[nextIndex]}F 路線 →`;next.onclick=()=>showStage(nextIndex,true);section.append(next);}
     maps.append(section);
   }
   showStage(0);
+  if(!touchHintShown&&typeof matchMedia==='function'&&matchMedia('(max-width:700px)').matches&&viewports[0]?.append){touchHintShown=true;const hint=document.createElement('div');hint.className='map-touch-hint';hint.setAttribute('aria-hidden','true');hint.textContent='雙指可放大、縮小地圖';viewports[0].append(hint);setTimeout(()=>hint.classList.add('is-fading'),3200);setTimeout(()=>hint.remove(),3800);}
   function openLargeMap(){
     if(largeMode)return;largeMode=true;gestures.forEach(g=>g.cancel());cancelIntro();savedScroll={x:window.scrollX,y:window.scrollY};savedBody={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,overflow:document.body.style.overflow};Object.assign(document.body.style,{position:'fixed',top:`-${savedScroll.y}px`,width:'100%',overflow:'hidden'});
     largeSlot=document.createComment('地圖原位置');maps.parentNode.insertBefore(largeSlot,maps);dialog=document.createElement('dialog');dialog.className='large-map-dialog';dialog.setAttribute('aria-label','校園導覽大地圖');dialog.setAttribute('aria-modal','true');
     const shell=document.createElement('div'),header=document.createElement('header'),title=document.createElement('h2'),close=document.createElement('button');shell.className='large-map-shell';header.className='large-map-header';title.textContent='大地圖檢視';close.className='close-large-map';close.textContent='關閉大地圖';close.setAttribute('autofocus','');close.onclick=()=>closeLargeMap();header.append(title,close);shell.append(header,maps);dialog.append(shell);document.body.append(dialog);gestureNote.textContent='單指拖曳，雙指縮放或移動地圖。';
     dialog.addEventListener('cancel',e=>{e.preventDefault();closeLargeMap();});dialog.addEventListener('close',()=>closeLargeMap());dialog.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();closeLargeMap();}else if(e.key==='Tab'){const focusable=[...dialog.querySelectorAll('button,[tabindex="0"]')].filter(n=>!n.disabled&&n.getClientRects().length);const first=focusable[0],last=focusable.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}});
-    if(typeof dialog.showModal==='function')dialog.showModal();else{dialog.setAttribute('role','dialog');dialog.setAttribute('open','');}viewMode=viewMode==='whole'?'whole':'focus';applyView();close.focus({preventScroll:true});
+    if(typeof dialog.showModal==='function')dialog.showModal();else{dialog.setAttribute('role','dialog');dialog.setAttribute('open','');}viewMode=wantsFocus()?(current===0?'whole':'focus'):(viewMode==='whole'?'whole':'focus');applyView();close.focus({preventScroll:true});
   }
   function closeLargeMap(restoreFocus=true){
-    if(!largeMode)return;largeMode=false;gestures.forEach(g=>g.cancel());largeSlot.replaceWith(maps);largeSlot=null;const previous=dialog;dialog=null;if(typeof previous.close==='function'&&previous.open)previous.close();previous.remove();Object.assign(document.body.style,savedBody);gestureNote.textContent='單指捲頁，雙指縮放或移動地圖。';viewMode=wantsFocus()?'focus':'whole';window.scrollTo(savedScroll.x,savedScroll.y);applyView();window.scrollTo(savedScroll.x,savedScroll.y);if(restoreFocus)expand.focus({preventScroll:true});
+    if(!largeMode)return;largeMode=false;gestures.forEach(g=>g.cancel());largeSlot.replaceWith(maps);largeSlot=null;const previous=dialog;dialog=null;if(typeof previous.close==='function'&&previous.open)previous.close();previous.remove();Object.assign(document.body.style,savedBody);gestureNote.textContent='單指捲頁，雙指縮放或移動地圖。';viewMode=wantsFocus()&&current!==0?'focus':'whole';window.scrollTo(savedScroll.x,savedScroll.y);applyView();window.scrollTo(savedScroll.x,savedScroll.y);if(restoreFocus)expand.focus({preventScroll:true});
   }
-  const onResize=()=>{if(pendingEnter)enterStage();else if(viewMode==='focus'&&!introTimers.length)applyView();else updateCamera();};
+  const onResize=()=>{if(pendingEnter)enterStage();else if((viewMode==='focus'||viewMode==='fill')&&!introTimers.length)applyView();else updateCamera();};
   let observer=null,frame=null;if(typeof ResizeObserver!=='undefined'){observer=new ResizeObserver(onResize);viewports.forEach(v=>observer.observe(v));}if(typeof requestAnimationFrame!=='undefined')frame=requestAnimationFrame(onResize);disposeMapInteractions=()=>{cancelIntro();closeLargeMap(false);observer?.disconnect();gestures.forEach(g=>g.dispose());if(frame!==null&&typeof cancelAnimationFrame!=='undefined')cancelAnimationFrame(frame);};
 }
 function run() {
