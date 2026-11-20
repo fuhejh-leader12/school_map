@@ -16,28 +16,29 @@
  const mapCache=new Map();let disposers=[];
 
  function sortSelected(){state.selected.sort((a,b)=>Number(a)-Number(b));}
- function toggleSelect(name){if(state.selected.includes(name)){state.selected=state.selected.filter(n=>n!==name);state.visited=state.visited.filter(n=>n!==name);}else{state.selected.push(name);sortSelected();}save();render();}
+ function toggleSelect(name){if(state.selected.includes(name)){state.selected=state.selected.filter(n=>n!==name);state.visited=state.visited.filter(n=>n!==name);}else{state.selected.push(name);sortSelected();}save();if(mode==='map'&&!state.selected.length)mode='pick';render();}
  function toggleVisited(name){state.visited=state.visited.includes(name)?state.visited.filter(n=>n!==name):[...state.visited,name];save();renderChips();updateBadges();}
 
  // ── 選班 ──
  function renderGrid(){
-  document.querySelectorAll('.grade-switch button').forEach(b=>{const on=b.dataset.grade===state.grade;b.setAttribute('aria-selected',String(on));b.classList.toggle('is-active',on);});
+  const gradeNames={7:'七年級',8:'八年級',9:'九年級'};document.querySelectorAll('.grade-switch button').forEach(b=>{const on=b.dataset.grade===state.grade,n=state.selected.filter(x=>x[0]===b.dataset.grade).length;b.setAttribute('aria-selected',String(on));b.classList.toggle('is-active',on);b.innerHTML=`${gradeNames[b.dataset.grade]}${n?`<span class="grade-count">${n}</span>`:''}`;});
   grid.replaceChildren(...classes.filter(n=>n.name[0]===state.grade).map(n=>{const b=document.createElement('button');b.type='button';b.textContent=n.name;b.setAttribute('aria-pressed',String(state.selected.includes(n.name)));b.onclick=()=>toggleSelect(n.name);return b;}));
  }
  document.querySelectorAll('.grade-switch button').forEach(b=>b.onclick=()=>{state.grade=b.dataset.grade;save();renderGrid();});
  $('#class-form').addEventListener('submit',e=>{
   e.preventDefault();const input=$('#class-input'),nums=(input.value.match(/\d{3}/g)||[]);const added=[],missing=[];
   for(const n of nums){if(!byName.has(n))missing.push(n);else if(!state.selected.includes(n)){state.selected.push(n);added.push(n);}}
-  sortSelected();save();input.value='';
+  sortSelected();save();input.value='';input.blur();
   message.textContent=missing.length?`找不到：${missing.join('、')}（只有701–730、801–830、901–930）`:(nums.length?'':'請輸入三位數班號，例如 728');
-  if(added.length)state.grade=added.at(-1)[0];render();if(added.length)showMaps();
+  if(added.length)state.grade=added.at(-1)[0];render();
  });
- $('#clear-all').onclick=()=>{if(!state.selected.length)return;state.selected=[];state.visited=[];save();render();};
+ const clearAll=()=>{state.selected=[];state.visited=[];save();setMode('pick');};
+ $('#clear-all').onclick=clearAll;$('#pick-clear').onclick=clearAll;
 
  // ── 已選清單 ──
  function renderChips(){
   const total=state.selected.length,done=state.visited.length;
-  $('#selected-panel').hidden=!total;$('#empty').hidden=!!total;
+  
   $('#progress').textContent=total?`已完成 ${done}／${total}`:'';
   chips.replaceChildren(...state.selected.map(name=>{
    const n=byName.get(name),wrap=document.createElement('span'),main=document.createElement('button'),remove=document.createElement('button'),visited=state.visited.includes(name);
@@ -91,11 +92,19 @@
  }
  function updateBadges(){maps.querySelectorAll('.find-mark').forEach(g=>{const done=state.visited.includes(g.dataset.name);g.classList.toggle('is-visited',done);const t=g.querySelector('.find-badge-text');t.innerHTML=done?`<tspan font-size="19">✓</tspan>${g.dataset.name}`:g.dataset.name;t.style.fontSize=done?'25px':'';});}
 
- function render(){renderGrid();renderChips();renderMaps();const has=state.selected.length>0;$('#picker-summary').textContent=has?'＋ 新增或修改班級':'要去哪些班？';$('#picker').classList.toggle('is-compact',has);$('#done-picking').hidden=!has;if(!has)$('#picker').open=true;}
- function showMaps(){$('#picker').open=false;window.scrollTo({top:0,behavior:'smooth'});}
- $('#done-picking').onclick=showMaps;
+ // ── 兩個畫面：選班（可連續多選）→ 看地圖 ──
+ let mode=state.selected.length?'map':'pick';
+ function setMode(m){mode=m;render();window.scrollTo(0,0);}
+ function renderPickBar(){
+  const n=state.selected.length;$('#pick-bar').hidden=!n;document.body.classList.toggle('has-pick-bar',n>0&&mode==='pick');
+  $('#pick-count').textContent=`已選 ${n} 班`;$('#pick-list').textContent=state.selected.join('、');
+ }
+ function render(){
+  $('#pick-view').hidden=mode!=='pick';$('#map-view').hidden=mode!=='map';
+  renderGrid();renderPickBar();
+  if(mode==='map'){renderChips();renderMaps();}else{disposers.forEach(d=>d());disposers=[];maps.replaceChildren();}
+ }
+ $('#show-maps').onclick=()=>{if(state.selected.length)setMode('map');};
+ $('#edit-classes').onclick=()=>setMode('pick');
  render();
- // 有選好的班級時，打開頁面直接看地圖；選班區收合在下方。
- if(state.selected.length)$('#picker').open=false;
- $('#picker').addEventListener('toggle',()=>{if($('#picker').open&&state.selected.length)$('#picker').scrollIntoView({block:'start',behavior:'smooth'});});
 })();

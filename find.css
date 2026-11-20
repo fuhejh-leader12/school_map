@@ -58,3 +58,16 @@
 .picker.is-compact[open]>summary{justify-content:flex-start;margin-bottom:10px}
 #maps:empty{display:none}
 .done-picking{display:block;width:100%;min-height:52px;margin-top:14px;border:none;border-radius:12px;background:#2f6b55;color:#fff;font-size:18px;font-weight:600}
+/* 選班畫面：底部固定列，選完按「看地圖」 */
+.pick-sub{display:block;margin-top:2px;font-size:14px;font-weight:400;color:var(--muted)}
+body.has-pick-bar{padding-bottom:96px}
+.pick-bar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(40,61,75,.12)}
+.pick-bar-info{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.35}
+.pick-bar-info strong{font-size:17px;color:#c9473b}
+.pick-bar-info span{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.pick-clear{flex:none;min-height:48px;min-width:0;padding:0 12px;border:1px solid #c8d4d8;border-radius:10px;background:#fff;color:var(--muted);font-size:15px}
+.show-maps{flex:none;min-height:48px;min-width:0;padding:0 18px;border:none;border-radius:10px;background:#2f6b55;color:#fff;font-size:18px;font-weight:600}
+.edit-classes{display:block;width:100%;min-height:52px;margin:14px 0 8px;border:2px solid var(--primary);border-radius:12px;background:#fff;color:var(--primary);font-size:18px;font-weight:600}
+#map-view .clear-all{display:block;margin:6px auto 0}
+@media(min-width:700px){.pick-bar{left:50%;right:auto;width:min(980px,100%);transform:translateX(-50%);border-radius:14px 14px 0 0}}
+.grade-count{display:inline-grid;place-items:center;min-width:22px;height:22px;margin-left:6px;padding:0 6px;border-radius:999px;background:#c9473b;color:#fff;font-size:13px;font-weight:700;vertical-align:1px}
