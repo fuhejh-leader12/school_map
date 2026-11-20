@@ -55,7 +55,9 @@ function transferTarget(stage,id){
 }
 function movementLabelMarkup(n,texts,D,occupied=[],options={}) {
  // 在設施附近找空位，避開教室文字中心及已放置的標籤；不改變設施位置。
- const obstacles=D.nodes.filter(x=>x.floor===n.floor&&['班級教室','場地'].includes(x.type)).map(x=>({x:x.x-40,y:x.y-15,w:80,h:30}));
+ const obstacles=[...D.nodes.filter(x=>x.floor===n.floor&&['班級教室','場地'].includes(x.type)).map(x=>({x:x.x-40,y:x.y-15,w:80,h:30})),
+  // 樓梯、洗手間、電梯圖示也要避開，標籤不要蓋住它們。
+  ...D.nodes.filter(x=>x.floor===n.floor&&x.id!==n.id&&['樓梯','洗手間','電梯'].includes(x.type)).map(x=>({x:x.x-16,y:x.y-16,w:32,h:32}))];
  const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
  let markup='';
  const interactive=Number.isInteger(options.targetFloor);
@@ -63,7 +65,7 @@ function movementLabelMarkup(n,texts,D,occupied=[],options={}) {
  const segHits=r=>segs.filter(([x1,y1,x2,y2])=>{const k=Math.max(2,Math.ceil(Math.hypot(x2-x1,y2-y1)/4));for(let i=0;i<=k;i++){const x=x1+(x2-x1)*i/k,y=y1+(y2-y1)*i/k;if(x>r.x-6&&x<r.x+r.w+6&&y>r.y-6&&y<r.y+r.h+6)return true;}return false;}).length;
  const pointHits=r=>points.filter(([x,y])=>x>r.x-24&&x<r.x+r.w+24&&y>r.y-24&&y<r.y+r.h+24).length;
  // 分數越低越好：壓到路線或目的地／起點最嚴重，其次是其他標籤，再其次是教室文字；同分時離設施越近越好。
- const score=r=>segHits(r)*100+pointHits(r)*100+occupied.filter(o=>overlap(r,o)).length*20+obstacles.filter(o=>overlap(r,o)).length*3;
+ const score=r=>segHits(r)*100+pointHits(r)*100+occupied.filter(o=>overlap(r,o)).length*20+obstacles.filter(o=>overlap(r,o)).reduce((t,o)=>t+(o.w===32?15:3),0);
  for(const text of texts){const textWidth=text.includes('出口')?92:text.includes('電梯')?202:112,w=textWidth+(interactive?30:0),h=28,candidates=[[20,-42],[-w-20,-42],[20,18],[-w-20,18],[-w/2,-65],[-w/2,35],[24,-14],[-w-24,-14],[20,-78],[-w-20,-78],[20,52],[-w-20,52],[-w/2,-100],[-w/2,70]].map(([dx,dy],order)=>({x:Math.max(4,Math.min(996-w,n.x+dx)),y:Math.max(4,Math.min(768,n.y+dy)),w,h,order}));
   candidates.sort((a,b)=>score(a)-score(b)||a.order-b.order);
   const p=candidates[0];occupied.push(p);
