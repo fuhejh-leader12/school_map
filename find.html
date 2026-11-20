@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>找班地圖｜福和國中</title><link rel="stylesheet" href="style.css?v=find-v5-20261120"><link rel="stylesheet" href="find.css?v=find-v5-20261120"></head>
+<body class="find-page">
+<main>
+<header class="find-header"><img src="assets/福和國中校徽.png" alt="" class="find-logo"><div><h1>找班地圖</h1><p>選好要去的班級，地圖會把它們都圈出來</p></div></header>
+
+
+
+<section id="selected-panel" class="find-panel" aria-labelledby="selected-title" hidden>
+ <div class="selected-head"><h2 id="selected-title" class="find-section-title">今天的班級</h2><span id="progress" class="progress"></span></div>
+ <p class="hint">點班號可以打勾，去過的會變灰。</p>
+ <div id="chips" class="chips"></div>
+ <button type="button" id="clear-all" class="clear-all">全部清除</button>
+</section>
+
+<section id="maps" aria-label="班級位置地圖"></section>
+<p id="empty" class="empty">在下方選好班級，地圖就會出現在這裡。</p>
+
+<details id="picker" class="find-panel picker" open>
+ <summary id="picker-summary" class="find-section-title">要去哪些班？</summary>
+ <form id="class-form" class="class-form" autocomplete="off">
+  <label for="class-input" class="sr-only">輸入班號</label>
+  <input id="class-input" type="text" inputmode="numeric" placeholder="輸入班號，例如 728 805 912">
+  <button type="submit">加入</button>
+ </form>
+ <p id="input-message" class="input-message" aria-live="polite"></p>
+ <div class="grade-switch" role="tablist" aria-label="年級">
+  <button type="button" data-grade="7" role="tab">七年級</button><button type="button" data-grade="8" role="tab">八年級</button><button type="button" data-grade="9" role="tab">九年級</button>
+ </div>
+ <div id="class-grid" class="class-grid"></div>
+ <button type="button" id="done-picking" class="done-picking" hidden>完成，看地圖</button>
+</details>
+<p class="find-note">地圖為相對位置示意，請依現場門牌確認。打勾紀錄只存在這支手機，隔天自動清空。</p>
+</main>
+<script src="runtime/current.js?v=find-v5-20261120"></script>
+<script src="assets/fonts/map-font.js?v=find-v5-20261120"></script>
+<script src="map-theme.js?v=find-v5-20261120"></script>
+<script src="map-view.js?v=find-v5-20261120"></script>
+<script src="find.js?v=find-v5-20261120"></script>
+</body></html>
