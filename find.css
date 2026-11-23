@@ -71,3 +71,25 @@ body.has-pick-bar{padding-bottom:96px}
 #map-view .clear-all{display:block;margin:6px auto 0}
 @media(min-width:700px){.pick-bar{left:50%;right:auto;width:min(980px,100%);transform:translateX(-50%);border-radius:14px 14px 0 0}}
 .grade-count{display:inline-grid;place-items:center;min-width:22px;height:22px;margin-left:6px;padding:0 6px;border-radius:999px;background:#c9473b;color:#fff;font-size:13px;font-weight:700;vertical-align:1px}
+/* 地圖：自動對準班級＋全螢幕（2026-11-23） */
+.find-map{position:relative;width:100%;aspect-ratio:5/4;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:#fafbf8;cursor:zoom-in}
+.find-map.is-large{aspect-ratio:auto;width:100%;height:100%;cursor:grab}
+.find-map-stage{position:absolute;inset:0;transform-origin:center;user-select:none}
+.find-map-stage img{width:100%;height:100%;display:block;object-fit:contain}
+.find-map-stage svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.find-map-stage svg .find-mark{pointer-events:auto;cursor:pointer}
+.find-map-controls{position:absolute;top:8px;right:8px;z-index:3;display:flex;gap:6px}
+.find-map-btn{display:inline-flex;align-items:center;gap:5px;min-height:40px;padding:0 12px;border:1.5px solid #9fb4bd;border-radius:999px;background:rgba(255,255,255,.94);color:var(--primary);font-size:15px;font-weight:600;box-shadow:0 2px 6px rgba(40,61,75,.18)}
+.find-map-btn.is-primary{background:#2f6b55;border-color:#2f6b55;color:#fff}
+.find-map-btn[hidden]{display:none}
+.find-full{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;margin:0;padding:10px 10px calc(10px + env(safe-area-inset-bottom));border:none;background:#fffefb;color:var(--ink);overflow:hidden}
+.find-full[open]{display:flex;flex-direction:column;gap:6px}
+.find-full::backdrop{background:#263d4b}
+.find-full-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
+.find-full-head h2{margin:0;display:flex;align-items:baseline;gap:10px;min-width:0}
+.find-full-floor{font-size:26px;color:var(--primary);line-height:1}
+.find-full-list{font-size:17px;color:#c9473b;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.find-full-close{flex:none;min-height:44px;padding:0 18px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:17px;font-weight:600}
+.find-full-hint{flex:none;margin:0;font-size:14px;color:var(--muted)}
+.find-full-body{flex:1;min-height:0}
+@media(orientation:landscape){.find-full-hint{display:none}}

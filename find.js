@@ -64,33 +64,67 @@
    best??={x:Math.max(2,Math.min(998-W,x-W/2)),y:Math.max(2,Math.min(798-H,y-58-H/2)),w:W,h:H};placed.push(best);return {name,x,y,r:best};
   });
  }
+ // 一層地圖：自動對準選到的班級；large=true 時是全螢幕版本（可單指拖曳）。
+ function buildMap(floor,names,{large=false}={}){
+  const {src,display}=floorAssets(floor);
+  const wrapper=document.createElement('div'),stage=document.createElement('div'),img=document.createElement('img'),svg=document.createElementNS(ns,'svg');
+  wrapper.className='find-map'+(large?' is-large':'');stage.className='find-map-stage';img.src=src;img.alt=`${floor}樓地圖，已標出${names.join('、')}`;img.draggable=false;svg.setAttribute('viewBox','0 0 1000 800');svg.setAttribute('aria-hidden','true');
+  const items=names.map(name=>{const n=display.get(byName.get(name).id);return {name,x:n.x,y:n.y};});
+  // 相鄰班級很近時把圈縮小，避免圈圈互相重疊。
+  const ringR=it=>Math.max(14,Math.min(27,...items.filter(o=>o!==it).map(o=>Math.hypot(o.x-it.x,o.y-it.y)/2-2)));
+  const focusPoints=[];
+  for(const {name,x,y,r} of placeBadges(items)){const rr=ringR(items.find(i=>i.name===name));
+   const g=document.createElementNS(ns,'g');g.setAttribute('class','find-mark');g.dataset.name=name;
+   g.innerHTML=`<circle class="find-ring" cx="${x}" cy="${y}" r="${rr}"/><line class="find-leader" x1="${x}" y1="${y}" x2="${r.x+r.w/2}" y2="${r.y+r.h/2}"/><rect class="find-badge" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="21"/><text class="find-badge-text" x="${r.x+r.w/2}" y="${r.y+r.h/2+10}" text-anchor="middle">${name}</text><rect class="find-hit" x="${Math.min(r.x,x-30)-6}" y="${Math.min(r.y,y-30)-6}" width="${Math.max(r.x+r.w,x+30)-Math.min(r.x,x-30)+12}" height="${Math.max(r.y+r.h,y+30)-Math.min(r.y,y-30)+12}" fill="transparent"/>`;
+   g.addEventListener('click',e=>{e.stopPropagation();toggleVisited(name);});
+   svg.append(g);focusPoints.push([x-rr,y-rr],[x+rr,y+rr],[r.x,r.y],[r.x+r.w,r.y+r.h]);
+  }
+  stage.append(img,svg);wrapper.append(stage);
+  const box=routeFocusBox(focusPoints,{padding:45,minWidth:320,minHeight:256});
+  const controls=document.createElement('div'),toggle=document.createElement('button');controls.className='find-map-controls';
+  toggle.type='button';toggle.className='find-map-btn';controls.append(toggle);
+  let full=null;
+  if(!large){full=document.createElement('button');full.type='button';full.className='find-map-btn is-primary';full.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>全螢幕';full.setAttribute('aria-haspopup','dialog');controls.append(full);}
+  wrapper.append(controls);
+  // 地圖放大時，按下滑鼠會被拖曳功能接走；按鈕和班號標籤要先攔下來，點擊才會正常。
+  for(const el of [controls,svg])el.addEventListener('pointerdown',e=>{if(e.target.closest?.('button,.find-mark'))e.stopPropagation();});
+  const camera=mapCamera();let mode='focus',focusScale=1;
+  function paint(){stage.style.transform=`translate(${camera.x}%,${camera.y}%) scale(${camera.scale})`;wrapper.style.touchAction=large?'none':'pan-y';const zoomed=camera.scale>1.02;toggle.textContent=zoomed?'看整層':'對準班級';toggle.hidden=focusScale<1.05&&!zoomed;}
+  function apply(){const b=wrapper.getBoundingClientRect();if(!b.width)return;camera.setBounds(b.width,b.height);const test=mapCamera();test.setBounds(b.width,b.height);focusMapCamera(test,box,{maxScale:2.5});focusScale=test.scale;
+   if(mode==='focus')focusMapCamera(camera,box,{maxScale:2.5});else if(mode==='whole')camera.reset();paint();}
+  toggle.onclick=e=>{e.stopPropagation();mode=camera.scale>1.02?'whole':'focus';apply();};
+  const gesture=bindMapGestures(wrapper,camera,()=>{mode='free';paint();},{isLarge:()=>large});
+  let ro=null;if(typeof ResizeObserver!=='undefined'){ro=new ResizeObserver(()=>{if(mode==='free'){const b=wrapper.getBoundingClientRect();if(b.width)camera.setBounds(b.width,b.height);paint();}else apply();});ro.observe(wrapper);}
+  if(full){full.onclick=e=>{e.stopPropagation();openFull(floor,names);};wrapper.addEventListener('click',()=>openFull(floor,names));}
+  return {wrapper,apply,dispose(){gesture.dispose();ro?.disconnect();}};
+ }
+ // 全螢幕：整頁只放這一層地圖，手機橫放可以看得更大。
+ function openFull(floor,names){
+  if(document.querySelector('.find-full'))return;
+  const dlg=document.createElement('dialog'),head=document.createElement('header'),title=document.createElement('h2'),close=document.createElement('button'),hint=document.createElement('p'),body=document.createElement('div');
+  dlg.className='find-full';dlg.setAttribute('aria-label',`${floor}樓地圖全螢幕`);head.className='find-full-head';title.innerHTML=`<span class="find-full-floor">${floor}F</span><span class="find-full-list">${names.join('、')}</span>`;
+  close.type='button';close.className='find-full-close';close.textContent='關閉';hint.className='find-full-hint';hint.textContent='把手機橫放，地圖會更大';body.className='find-full-body';
+  const m=buildMap(floor,names,{large:true});body.append(m.wrapper);head.append(title,close);dlg.append(head,hint,body);document.body.append(dlg);
+  const prevOverflow=document.body.style.overflow;document.body.style.overflow='hidden';
+  const shut=()=>{m.dispose();if(dlg.open)dlg.close();dlg.remove();document.body.style.overflow=prevOverflow;};
+  close.onclick=shut;dlg.addEventListener('cancel',e=>{e.preventDefault();shut();});
+  if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
+  updateBadges();requestAnimationFrame(()=>m.apply());close.focus({preventScroll:true});
+ }
  function renderMaps(){
   disposers.forEach(d=>d());disposers=[];maps.replaceChildren();
-  const floors=[...new Set(state.selected.map(n=>byName.get(n).floor))].sort((a,b)=>a-b);
+  const floors=[...new Set(state.selected.map(n=>byName.get(n).floor))].sort((a,b)=>a-b),built=[];
   for(const floor of floors){
-   const names=state.selected.filter(n=>byName.get(n).floor===floor),{src,display}=floorAssets(floor);
+   const names=state.selected.filter(n=>byName.get(n).floor===floor);
    const section=document.createElement('section'),head=document.createElement('div'),title=document.createElement('h2'),list=document.createElement('p');
    section.className='floor-card';head.className='floor-head';title.textContent=`${floor}F`;list.className='floor-list';list.textContent=names.join('、');head.append(title,list);
-   const wrapper=document.createElement('div'),stage=document.createElement('div'),img=document.createElement('img'),svg=document.createElementNS(ns,'svg'),reset=document.createElement('button');
-   wrapper.className='map';stage.className='map-stage';img.src=src;img.alt=`${floor}樓地圖，已標出${names.join('、')}`;img.draggable=false;svg.setAttribute('viewBox','0 0 1000 800');svg.setAttribute('aria-hidden','true');
-   const items=names.map(name=>{const n=display.get(byName.get(name).id);return {name,x:n.x,y:n.y};});
-   // 相鄰班級很近時把圈縮小，避免圈圈互相重疊。
-   const ringR=it=>Math.max(14,Math.min(27,...items.filter(o=>o!==it).map(o=>Math.hypot(o.x-it.x,o.y-it.y)/2-2)));
-   for(const {name,x,y,r} of placeBadges(items)){const rr=ringR(items.find(i=>i.name===name));
-    const g=document.createElementNS(ns,'g');g.setAttribute('class','find-mark');g.dataset.name=name;
-    g.innerHTML=`<circle class="find-ring" cx="${x}" cy="${y}" r="${rr}"/><line class="find-leader" x1="${x}" y1="${y}" x2="${r.x+r.w/2}" y2="${r.y+r.h/2}"/><rect class="find-badge" x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="21"/><text class="find-badge-text" x="${r.x+r.w/2}" y="${r.y+r.h/2+10}" text-anchor="middle">${name}</text><rect class="find-hit" x="${Math.min(r.x,x-30)-6}" y="${Math.min(r.y,y-30)-6}" width="${Math.max(r.x+r.w,x+30)-Math.min(r.x,x-30)+12}" height="${Math.max(r.y+r.h,y+30)-Math.min(r.y,y-30)+12}" fill="transparent"/>`;
-    g.addEventListener('click',e=>{e.stopPropagation();toggleVisited(name);});
-    svg.append(g);
-   }
-   stage.append(img,svg);reset.type='button';reset.className='map-reset';reset.textContent='看整層';reset.hidden=true;wrapper.append(stage,reset);
-   const camera=mapCamera(),update=()=>{const b=wrapper.getBoundingClientRect();if(b.width)camera.setBounds(b.width,b.height);stage.style.transform=`translate(${camera.x}%,${camera.y}%) scale(${camera.scale})`;reset.hidden=camera.scale<=1.02;};
-   reset.onclick=e=>{e.stopPropagation();camera.reset();update();};
-   const gesture=bindMapGestures(wrapper,camera,update);disposers.push(()=>gesture.dispose());
-   section.append(head,wrapper);maps.append(section);update();
+   const m=buildMap(floor,names);disposers.push(()=>m.dispose());built.push(m);
+   section.append(head,m.wrapper);maps.append(section);
   }
+  built.forEach(m=>m.apply());requestAnimationFrame(()=>built.forEach(m=>m.apply()));
   updateBadges();
  }
- function updateBadges(){maps.querySelectorAll('.find-mark').forEach(g=>{const done=state.visited.includes(g.dataset.name);g.classList.toggle('is-visited',done);const t=g.querySelector('.find-badge-text');t.innerHTML=done?`<tspan font-size="19">✓</tspan>${g.dataset.name}`:g.dataset.name;t.style.fontSize=done?'25px':'';});}
+ function updateBadges(){document.querySelectorAll('.find-mark').forEach(g=>{const done=state.visited.includes(g.dataset.name);g.classList.toggle('is-visited',done);const t=g.querySelector('.find-badge-text');t.innerHTML=done?`<tspan font-size="19">✓</tspan>${g.dataset.name}`:g.dataset.name;t.style.fontSize=done?'25px':'';});}
 
  // ── 兩個畫面：選班（可連續多選）→ 看地圖 ──
  let mode=state.selected.length?'map':'pick';
