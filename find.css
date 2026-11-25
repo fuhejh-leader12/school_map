@@ -93,3 +93,10 @@ body.has-pick-bar{padding-bottom:96px}
 .find-full-hint{flex:none;margin:0;font-size:14px;color:var(--muted)}
 .find-full-body{flex:1;min-height:0}
 @media(orientation:landscape){.find-full-hint{display:none}}
+/* 按鈕移到樓層標題列，不再蓋住地圖 */
+.floor-head{align-items:center}
+.floor-head .find-map-controls{position:static;margin-left:auto;flex:none}
+.floor-list{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.find-full-actions{display:flex;align-items:center;gap:8px;flex:none}
+.find-full-actions .find-map-controls{position:static}
+.find-map-btn{min-height:44px}

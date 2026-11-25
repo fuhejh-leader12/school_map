@@ -80,23 +80,25 @@
    svg.append(g);focusPoints.push([x-rr,y-rr],[x+rr,y+rr],[r.x,r.y],[r.x+r.w,r.y+r.h]);
   }
   stage.append(img,svg);wrapper.append(stage);
-  const box=routeFocusBox(focusPoints,{padding:45,minWidth:320,minHeight:256});
+  // 放大要保留足夠的周邊（至少約六成樓層），才對得上腦中的地圖；倍率上限 1.6。
+  const box=routeFocusBox(focusPoints,{padding:70,minWidth:600,minHeight:480});
+  const ZOOM_MAX=1.6,autoFocus=()=>large||wrapper.getBoundingClientRect().width<700;
   const controls=document.createElement('div'),toggle=document.createElement('button');controls.className='find-map-controls';
   toggle.type='button';toggle.className='find-map-btn';controls.append(toggle);
   let full=null;
   if(!large){full=document.createElement('button');full.type='button';full.className='find-map-btn is-primary';full.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>全螢幕';full.setAttribute('aria-haspopup','dialog');controls.append(full);}
-  wrapper.append(controls);
   // 地圖放大時，按下滑鼠會被拖曳功能接走；按鈕和班號標籤要先攔下來，點擊才會正常。
-  for(const el of [controls,svg])el.addEventListener('pointerdown',e=>{if(e.target.closest?.('button,.find-mark'))e.stopPropagation();});
-  const camera=mapCamera();let mode='focus',focusScale=1;
+  for(const el of [svg])el.addEventListener('pointerdown',e=>{if(e.target.closest?.('button,.find-mark'))e.stopPropagation();});
+  const camera=mapCamera();let mode=null,focusScale=1;
   function paint(){stage.style.transform=`translate(${camera.x}%,${camera.y}%) scale(${camera.scale})`;wrapper.style.touchAction=large?'none':'pan-y';const zoomed=camera.scale>1.02;toggle.textContent=zoomed?'看整層':'對準班級';toggle.hidden=focusScale<1.05&&!zoomed;}
-  function apply(){const b=wrapper.getBoundingClientRect();if(!b.width)return;camera.setBounds(b.width,b.height);const test=mapCamera();test.setBounds(b.width,b.height);focusMapCamera(test,box,{maxScale:2.5});focusScale=test.scale;
-   if(mode==='focus')focusMapCamera(camera,box,{maxScale:2.5});else if(mode==='whole')camera.reset();paint();}
+  function apply(){const b=wrapper.getBoundingClientRect();if(!b.width)return;camera.setBounds(b.width,b.height);const test=mapCamera();test.setBounds(b.width,b.height);focusMapCamera(test,box,{maxScale:ZOOM_MAX});focusScale=test.scale;
+   if(mode===null)mode=autoFocus()?'focus':'whole';
+   if(mode==='focus')focusMapCamera(camera,box,{maxScale:ZOOM_MAX});else if(mode==='whole')camera.reset();paint();}
   toggle.onclick=e=>{e.stopPropagation();mode=camera.scale>1.02?'whole':'focus';apply();};
   const gesture=bindMapGestures(wrapper,camera,()=>{mode='free';paint();},{isLarge:()=>large});
   let ro=null;if(typeof ResizeObserver!=='undefined'){ro=new ResizeObserver(()=>{if(mode==='free'){const b=wrapper.getBoundingClientRect();if(b.width)camera.setBounds(b.width,b.height);paint();}else apply();});ro.observe(wrapper);}
   if(full){full.onclick=e=>{e.stopPropagation();openFull(floor,names);};wrapper.addEventListener('click',()=>openFull(floor,names));}
-  return {wrapper,apply,dispose(){gesture.dispose();ro?.disconnect();}};
+  return {wrapper,controls,apply,dispose(){gesture.dispose();ro?.disconnect();}};
  }
  // 全螢幕：整頁只放這一層地圖，手機橫放可以看得更大。
  function openFull(floor,names){
@@ -104,7 +106,7 @@
   const dlg=document.createElement('dialog'),head=document.createElement('header'),title=document.createElement('h2'),close=document.createElement('button'),hint=document.createElement('p'),body=document.createElement('div');
   dlg.className='find-full';dlg.setAttribute('aria-label',`${floor}樓地圖全螢幕`);head.className='find-full-head';title.innerHTML=`<span class="find-full-floor">${floor}F</span><span class="find-full-list">${names.join('、')}</span>`;
   close.type='button';close.className='find-full-close';close.textContent='關閉';hint.className='find-full-hint';hint.textContent='把手機橫放，地圖會更大';body.className='find-full-body';
-  const m=buildMap(floor,names,{large:true});body.append(m.wrapper);head.append(title,close);dlg.append(head,hint,body);document.body.append(dlg);
+  const m=buildMap(floor,names,{large:true});body.append(m.wrapper);const right=document.createElement('div');right.className='find-full-actions';right.append(m.controls,close);head.append(title,right);dlg.append(head,hint,body);document.body.append(dlg);
   const prevOverflow=document.body.style.overflow;document.body.style.overflow='hidden';
   const shut=()=>{m.dispose();if(dlg.open)dlg.close();dlg.remove();document.body.style.overflow=prevOverflow;};
   close.onclick=shut;dlg.addEventListener('cancel',e=>{e.preventDefault();shut();});
@@ -119,7 +121,7 @@
    const section=document.createElement('section'),head=document.createElement('div'),title=document.createElement('h2'),list=document.createElement('p');
    section.className='floor-card';head.className='floor-head';title.textContent=`${floor}F`;list.className='floor-list';list.textContent=names.join('、');head.append(title,list);
    const m=buildMap(floor,names);disposers.push(()=>m.dispose());built.push(m);
-   section.append(head,m.wrapper);maps.append(section);
+   head.append(m.controls);section.append(head,m.wrapper);maps.append(section);
   }
   built.forEach(m=>m.apply());requestAnimationFrame(()=>built.forEach(m=>m.apply()));
   updateBadges();
